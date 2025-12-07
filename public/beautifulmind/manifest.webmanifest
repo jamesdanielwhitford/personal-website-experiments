@@ -1,0 +1,16 @@
+{
+  "name": "Beautiful Mind PWA",
+  "short_name": "Beautiful Mind",
+  "start_url": "/beautifulmind",
+  "scope": "/beautifulmind/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4a90e2",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
