@@ -1,4 +1,5 @@
 import { useBeautifulMindStore } from './stores/useBeautifulMindStore';
+import NotesDemo from './components/NotesDemo';
 
 export default function BeautifulMindPage() {
   const {
@@ -66,6 +67,10 @@ export default function BeautifulMindPage() {
           />
           {searchQuery && <p>Searching for: "{searchQuery}"</p>}
         </div>
+      </div>
+
+      <div style={{ marginTop: '2rem', border: '1px solid #ccc', padding: '1rem', borderRadius: '8px' }}>
+        <NotesDemo />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useGamesStore } from './stores/useGamesStore';
+import TodosDemo from './components/TodosDemo';
 
 export default function GamesPage() {
   const {
@@ -69,6 +70,10 @@ export default function GamesPage() {
             {soundEnabled ? '🔊 Sound On' : '🔇 Sound Off'}
           </button>
         </div>
+      </div>
+
+      <div style={{ marginTop: '2rem', border: '1px solid #ccc', padding: '1rem', borderRadius: '8px' }}>
+        <TodosDemo />
       </div>
     </div>
   );
