@@ -1,11 +1,20 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import BeautifulMindPage from './apps/beautifulmind/BeautifulMindPage'
+import GamesPage from './apps/games/GamesPage'
 import './App.css'
 
 function App() {
   return (
-    <div className="app">
-      <h1>Offline-First App</h1>
-      <p>Ready to build</p>
-    </div>
+    <BrowserRouter>
+      <div className="app">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/beautifulmind" element={<BeautifulMindPage />} />
+          <Route path="/games" element={<GamesPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   )
 }
 
