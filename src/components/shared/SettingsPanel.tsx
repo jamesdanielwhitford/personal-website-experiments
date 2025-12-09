@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { settingsService } from '../../db/settingsService';
 import type { UserSettings } from '../../db/database';
+import { useSystemTheme } from '../../hooks/useSystemTheme';
+import { getColors } from '../../theme/colors';
 
 type AppScope = 'beautifulmind' | 'games' | 'root';
 
@@ -10,6 +12,9 @@ interface SettingsPanelProps {
 }
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName }) => {
+  const theme = useSystemTheme();
+  const colors = getColors(theme);
+
   const [settings, setSettings] = useState<UserSettings | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
@@ -95,10 +100,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
   return (
     <div style={{
       padding: '1.5rem',
-      border: '1px solid #e0e0e0',
+      border: `1px solid ${colors.border}`,
       borderRadius: '8px',
       maxWidth: '600px',
-      backgroundColor: '#fafafa'
+      backgroundColor: colors.surface
     }}>
       <h3 style={{ marginTop: 0, marginBottom: '0.5rem' }}>
         {appName} Settings
@@ -106,11 +111,12 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
 
       <div style={{
         padding: '1rem',
-        backgroundColor: '#fff3cd',
-        border: '1px solid #ffc107',
+        backgroundColor: colors.warningBg,
+        border: `1px solid ${colors.warningBorder}`,
         borderRadius: '4px',
         marginBottom: '1.5rem',
-        fontSize: '0.9rem'
+        fontSize: '0.9rem',
+        color: colors.text
       }}>
         <strong>🔒 Privacy Notice:</strong> Your API key is stored locally in your browser's IndexedDB.
         It never leaves your device and is not sent to any server. You are responsible for keeping
@@ -138,7 +144,11 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
                 marginLeft: '0.5rem',
                 padding: '0.25rem 0.5rem',
                 fontSize: '0.85rem',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                backgroundColor: colors.surface,
+                color: colors.text,
+                border: `1px solid ${colors.border}`,
+                borderRadius: '4px'
               }}
             >
               {showApiKey ? 'Hide' : 'Show'}
@@ -156,7 +166,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
               onClick={() => setIsEditing(true)}
               style={{
                 padding: '0.5rem 1rem',
-                backgroundColor: '#007bff',
+                backgroundColor: colors.primary,
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
@@ -169,7 +179,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
               onClick={handleDelete}
               style={{
                 padding: '0.5rem 1rem',
-                backgroundColor: '#dc3545',
+                backgroundColor: colors.error,
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
@@ -194,7 +204,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
                 width: '100%',
                 padding: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc'
+                border: `1px solid ${colors.border}`,
+                backgroundColor: colors.background,
+                color: colors.text
               }}
             >
               <option value="openai">OpenAI</option>
@@ -216,11 +228,13 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
                 width: '100%',
                 padding: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
-                fontFamily: 'monospace'
+                border: `1px solid ${colors.border}`,
+                fontFamily: 'monospace',
+                backgroundColor: colors.background,
+                color: colors.text
               }}
             />
-            <label style={{ display: 'block', marginTop: '0.25rem', fontSize: '0.85rem' }}>
+            <label style={{ display: 'block', marginTop: '0.25rem', fontSize: '0.85rem', color: colors.textSecondary }}>
               <input
                 type="checkbox"
                 checked={showApiKey}
@@ -243,11 +257,13 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
                 width: '100%',
                 padding: '0.5rem',
                 borderRadius: '4px',
-                border: '1px solid #ccc',
-                fontFamily: 'monospace'
+                border: `1px solid ${colors.border}`,
+                fontFamily: 'monospace',
+                backgroundColor: colors.background,
+                color: colors.text
               }}
             />
-            <small style={{ color: '#666' }}>
+            <small style={{ color: colors.textSecondary }}>
               Leave blank to use default endpoint
             </small>
           </div>
@@ -258,7 +274,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
               disabled={saveStatus === 'saving'}
               style={{
                 padding: '0.5rem 1rem',
-                backgroundColor: saveStatus === 'saved' ? '#28a745' : '#007bff',
+                backgroundColor: saveStatus === 'saved' ? colors.success : colors.primary,
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
@@ -275,9 +291,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
                 onClick={handleCancel}
                 style={{
                   padding: '0.5rem 1rem',
-                  backgroundColor: '#6c757d',
-                  color: 'white',
-                  border: 'none',
+                  backgroundColor: colors.surface,
+                  color: colors.text,
+                  border: `1px solid ${colors.border}`,
                   borderRadius: '4px',
                   cursor: 'pointer'
                 }}
@@ -291,10 +307,10 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ appScope, appName 
             <div style={{
               marginTop: '1rem',
               padding: '0.75rem',
-              backgroundColor: '#f8d7da',
-              border: '1px solid #f5c6cb',
+              backgroundColor: colors.errorBg,
+              border: `1px solid ${colors.errorBorder}`,
               borderRadius: '4px',
-              color: '#721c24'
+              color: colors.error
             }}>
               Failed to save settings. Please try again.
             </div>
