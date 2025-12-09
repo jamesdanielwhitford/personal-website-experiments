@@ -1,5 +1,6 @@
 import { useGamesStore } from './stores/useGamesStore';
 import TodosDemo from './components/TodosDemo';
+import { SettingsPanel } from '../../components/shared/SettingsPanel';
 
 export default function GamesPage() {
   const {
@@ -74,6 +75,11 @@ export default function GamesPage() {
 
       <div style={{ marginTop: '2rem', border: '1px solid #ccc', padding: '1rem', borderRadius: '8px' }}>
         <TodosDemo />
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
+        <h3>API Settings</h3>
+        <SettingsPanel appScope="games" appName="Games" />
       </div>
     </div>
   );

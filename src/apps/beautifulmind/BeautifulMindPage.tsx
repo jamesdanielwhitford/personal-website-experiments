@@ -1,5 +1,6 @@
 import { useBeautifulMindStore } from './stores/useBeautifulMindStore';
 import NotesDemo from './components/NotesDemo';
+import { SettingsPanel } from '../../components/shared/SettingsPanel';
 
 export default function BeautifulMindPage() {
   const {
@@ -71,6 +72,11 @@ export default function BeautifulMindPage() {
 
       <div style={{ marginTop: '2rem', border: '1px solid #ccc', padding: '1rem', borderRadius: '8px' }}>
         <NotesDemo />
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
+        <h3>API Settings</h3>
+        <SettingsPanel appScope="beautifulmind" appName="Beautiful Mind" />
       </div>
     </div>
   );
