@@ -29,7 +29,7 @@ registerRoute(
   })
 )
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', (_event) => {
   console.log('Service Worker installing')
   self.skipWaiting()
 })
