@@ -14,7 +14,7 @@ interface BeautifulMindState {
   selectedNote: NoteFolderNode | null;
   loadedAsset: AssetContent | null;
   isLoadingAsset: boolean;
-  expandedPaths: Set<string>; // Track expanded folder paths as "path/to/folder"
+  expandedPaths: string[]; // Track expanded folder paths as "path/to/folder"
 
   // UI Actions
   toggleSettings: () => void;
@@ -30,11 +30,34 @@ interface BeautifulMindState {
   setLoadedAsset: (asset: AssetContent | null) => void;
   setLoadingAsset: (isLoading: boolean) => void;
   toggleFolderExpanded: (path: string[]) => void;
+  isPathExpanded: (path: string[]) => boolean;
   expandAll: () => void;
   collapseAll: () => void;
 }
 
-const initialState = {
+// Helper to convert path array to string key
+const pathToKey = (path: string[]): string => path.join('/');
+
+// Helper to collect all folder paths from tree
+const collectAllFolderPaths = (model: DirectoryModel | null): string[] => {
+  const paths: string[] = [''];
+  if (!model) return paths;
+
+  const traverse = (nodes: typeof model.root.children) => {
+    for (const node of nodes) {
+      if (node.type === 'folder') {
+        paths.push(pathToKey(node.path));
+        traverse(node.children);
+      }
+    }
+  };
+
+  traverse(model.root.children);
+  return paths;
+};
+
+export const useBeautifulMindStore = create<BeautifulMindState>((set, get) => ({
+  // Initial state
   isSettingsOpen: false,
   currentTab: 'home' as const,
   searchQuery: '',
@@ -44,46 +67,29 @@ const initialState = {
   selectedNote: null,
   loadedAsset: null,
   isLoadingAsset: false,
-  expandedPaths: new Set<string>(),
-};
-
-// Helper to convert path array to string key
-const pathToKey = (path: string[]): string => path.join('/');
-
-// Helper to collect all folder paths from tree
-const collectAllFolderPaths = (model: DirectoryModel | null): Set<string> => {
-  const paths = new Set<string>();
-  if (!model) return paths;
-
-  const traverse = (nodes: typeof model.root.children) => {
-    for (const node of nodes) {
-      if (node.type === 'folder') {
-        paths.add(pathToKey(node.path));
-        traverse(node.children);
-      }
-    }
-  };
-
-  // Add root
-  paths.add('');
-  traverse(model.root.children);
-  return paths;
-};
-
-export const useBeautifulMindStore = create<BeautifulMindState>((set) => ({
-  ...initialState,
+  expandedPaths: [''],
 
   // UI Actions
   toggleSettings: () => set((state) => ({ isSettingsOpen: !state.isSettingsOpen })),
   setCurrentTab: (tab) => set({ currentTab: tab }),
   setSearchQuery: (query) => set({ searchQuery: query }),
-  resetState: () => set({ ...initialState, expandedPaths: new Set<string>() }),
+  resetState: () => set({
+    isSettingsOpen: false,
+    currentTab: 'home' as const,
+    searchQuery: '',
+    directoryModel: null,
+    isScanning: false,
+    scanError: null,
+    selectedNote: null,
+    loadedAsset: null,
+    isLoadingAsset: false,
+    expandedPaths: [''],
+  }),
 
   // Directory Tree Actions
   setDirectoryModel: (model) => set({
     directoryModel: model,
-    // Auto-expand root when model is set
-    expandedPaths: model ? new Set(['']) : new Set<string>(),
+    expandedPaths: [''], // Start with root expanded
   }),
 
   setScanning: (isScanning) => set({ isScanning }),
@@ -95,18 +101,22 @@ export const useBeautifulMindStore = create<BeautifulMindState>((set) => ({
 
   toggleFolderExpanded: (path) => set((state) => {
     const key = pathToKey(path);
-    const newExpanded = new Set(state.expandedPaths);
-    if (newExpanded.has(key)) {
-      newExpanded.delete(key);
+    const isExpanded = state.expandedPaths.includes(key);
+    if (isExpanded) {
+      return { expandedPaths: state.expandedPaths.filter(p => p !== key) };
     } else {
-      newExpanded.add(key);
+      return { expandedPaths: [...state.expandedPaths, key] };
     }
-    return { expandedPaths: newExpanded };
   }),
+
+  isPathExpanded: (path) => {
+    const key = pathToKey(path);
+    return get().expandedPaths.includes(key);
+  },
 
   expandAll: () => set((state) => ({
     expandedPaths: collectAllFolderPaths(state.directoryModel),
   })),
 
-  collapseAll: () => set({ expandedPaths: new Set(['']) }), // Keep root expanded
+  collapseAll: () => set({ expandedPaths: [''] }),
 }));

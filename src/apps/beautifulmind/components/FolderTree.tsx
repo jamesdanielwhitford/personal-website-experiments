@@ -12,7 +12,8 @@ interface FolderTreeProps {
 export default function FolderTree({ root, onSelectNote, selectedNoteId }: FolderTreeProps) {
   const theme = useSystemTheme();
   const c = getColors(theme);
-  const { expandedPaths, toggleFolderExpanded } = useBeautifulMindStore();
+  const expandedPaths = useBeautifulMindStore((state) => state.expandedPaths);
+  const toggleFolderExpanded = useBeautifulMindStore((state) => state.toggleFolderExpanded);
 
   const pathToKey = (path: string[]): string => path.join('/');
 
@@ -55,7 +56,7 @@ export default function FolderTree({ root, onSelectNote, selectedNoteId }: Folde
 
     // Folder node
     const key = pathToKey(node.path);
-    const isExpanded = expandedPaths.has(key);
+    const isExpanded = expandedPaths.includes(key);
     const hasChildren = node.children.length > 0;
 
     return (

@@ -215,6 +215,29 @@ export function revokeAssetUrl(asset: AssetContent): void {
   }
 }
 
+// Update metadata for an existing note
+export async function updateNoteMetadata(
+  noteNode: NoteFolderNode,
+  updates: Partial<Pick<NoteMetadata, 'title' | 'tags'>>
+): Promise<NoteMetadata> {
+  const { handle, metadata } = noteNode;
+
+  // Create updated metadata
+  const updatedMetadata: NoteMetadata = {
+    ...metadata,
+    ...updates,
+    updatedAt: new Date().toISOString(),
+  };
+
+  // Write to metadata.json
+  const metadataHandle = await handle.getFileHandle('metadata.json', { create: true });
+  const writable = await metadataHandle.createWritable();
+  await writable.write(JSON.stringify(updatedMetadata, null, 2));
+  await writable.close();
+
+  return updatedMetadata;
+}
+
 // Helper to create a new note folder with metadata
 export async function createNoteFolder(
   parentHandle: FileSystemDirectoryHandle,
