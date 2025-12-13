@@ -1,5 +1,5 @@
 import { useBeautifulMindStore } from './stores/useBeautifulMindStore';
-import NotesDemo from './components/NotesDemo';
+import FolderBrowser from './components/FolderBrowser';
 import { SettingsPanel } from '../../components/shared/SettingsPanel';
 import { ThemedLayout } from '../../components/shared/ThemedLayout';
 import { useSystemTheme } from '../../hooks/useSystemTheme';
@@ -109,7 +109,7 @@ export default function BeautifulMindPage() {
           borderRadius: '8px',
           backgroundColor: colors.surface
         }}>
-          <NotesDemo />
+          <FolderBrowser />
         </div>
 
         <div style={{ marginTop: '2rem' }}>
